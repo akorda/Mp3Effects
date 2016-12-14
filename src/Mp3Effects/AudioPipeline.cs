@@ -51,6 +51,8 @@ namespace Mp3Effects
 
             this.ProgressNotifier.Tick("Save mp3 file...");
             File.WriteAllBytes(outMp3Path, outMp3Bytes);
+
+            this.ProgressNotifier.UpdateMessage("Finished!");
         }
 
         private static string GetOutputMp3Path(string mp3Path, int semitones)

@@ -7,6 +7,8 @@ namespace Mp3Effects.UI
 {
     public class ProgressBarProgressNotifier : IProgressNotifier, IDisposable
     {
+        public bool Enabled { get; set; } = true;
+
         ConsoleColor ForegroundColor { get; set; }
 
         ProgressBar _ProgressBar;
@@ -31,17 +33,17 @@ namespace Mp3Effects.UI
 
         public void UpdateMessage(string message)
         {            
-            this.ProgressBar.UpdateMessage(message);
+            if (this.Enabled) this.ProgressBar.UpdateMessage(message);
         }
 
         public void Tick(string message = null)
         {
-            this.ProgressBar.Tick(message);
+            if (this.Enabled) this.ProgressBar.Tick(message);
         }
 
         public void Dispose()
         {
-            this.ProgressBar.Dispose();
+            if (_ProgressBar != null) _ProgressBar.Dispose();
         }
     }
 }
