@@ -19,17 +19,13 @@ namespace Mp3Effects
                 settings.Pitch = new PitchSettings { Semitones = options.Semitones };
             }).MapResult(options =>
             {
-                return Execute(inputMp3Path, settings);
+                return Run(inputMp3Path, settings);
             }, 
-            errors => 
-            {
-                //ShowUsage();
-                return -1;
-            });
+            errors => -1);
             return result;            
         }
 
-        private static int Execute(string inputMp3Path, EffectSettings settings)
+        private static int Run(string inputMp3Path, EffectSettings settings)
         {
             if (settings.Pitch.Semitones == 0)
             {
@@ -53,16 +49,5 @@ namespace Mp3Effects
                 return -1;
             }
         }
-
-        //private static void ShowUsage()
-        //{
-        //    Console.WriteLine();
-        //    Console.WriteLine("-------------------- mp3 effects ---------------------");
-        //    Console.WriteLine("-  Change the pitch of an mp3 be several semitones   -");
-        //    Console.WriteLine("-  Usage:                                            -");
-        //    Console.WriteLine("-  mp3effects mp3_file semitones                     -");
-        //    Console.WriteLine("-  , semitones <> 0                                  -");
-        //    Console.WriteLine("-------------------- mp3 effects ---------------------");
-        //}
     }
 }
