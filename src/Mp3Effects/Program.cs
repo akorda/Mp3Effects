@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CommandLine;
+using Mp3Effects.Options;
 using Mp3Effects.UI;
 
 namespace Mp3Effects
@@ -9,21 +11,27 @@ namespace Mp3Effects
     {
         static int Main(string[] args)
         {
-            if (args.Length == 0 || args.Length != 2)
+            string inputMp3Path = "";
+            var settings = new EffectSettings();
+            var result = Parser.Default.ParseArguments<CommandLineOptions>(args).WithParsed(options =>
             {
-                ShowUsage();
-                return -1;
-            }
-
-            var inputMp3Path = args[0];
-            int semitones ;
-            if (!int.TryParse(args[1], out semitones))
+                inputMp3Path = options.Mp3File;
+                settings.Pitch = new PitchSettings { Semitones = options.Semitones };
+            }).MapResult(options =>
             {
-                ShowUsage();
+                return Execute(inputMp3Path, settings);
+            }, 
+            errors => 
+            {
+                //ShowUsage();
                 return -1;
-            }
+            });
+            return result;            
+        }
 
-            if (semitones == 0)
+        private static int Execute(string inputMp3Path, EffectSettings settings)
+        {
+            if (settings.Pitch.Semitones == 0)
             {
                 Console.WriteLine("Changing the pitch by 0 semitones does not alter the original audio. Skipping.");
                 return 0;
@@ -34,9 +42,9 @@ namespace Mp3Effects
                 using (var progressBar = new ProgressBarProgressNotifier())
                 {
                     var pipeline = new AudioPipeline(progressBar);
-                    pipeline.ApplyEffects(inputMp3Path, semitones);
+                    pipeline.ApplyEffects(inputMp3Path, settings);
                 }
-                    
+
                 return 0;
             }
             catch (Exception ex)
@@ -46,15 +54,15 @@ namespace Mp3Effects
             }
         }
 
-        private static void ShowUsage()
-        {
-            Console.WriteLine();
-            Console.WriteLine("-------------------- mp3 effects ---------------------");
-            Console.WriteLine("-  Change the pitch of an mp3 be several semitones   -");
-            Console.WriteLine("-  Usage:                                            -");
-            Console.WriteLine("-  mp3effects mp3_file semitones                     -");
-            Console.WriteLine("-  , semitones <> 0                                  -");
-            Console.WriteLine("-------------------- mp3 effects ---------------------");
-        }
+        //private static void ShowUsage()
+        //{
+        //    Console.WriteLine();
+        //    Console.WriteLine("-------------------- mp3 effects ---------------------");
+        //    Console.WriteLine("-  Change the pitch of an mp3 be several semitones   -");
+        //    Console.WriteLine("-  Usage:                                            -");
+        //    Console.WriteLine("-  mp3effects mp3_file semitones                     -");
+        //    Console.WriteLine("-  , semitones <> 0                                  -");
+        //    Console.WriteLine("-------------------- mp3 effects ---------------------");
+        //}
     }
 }

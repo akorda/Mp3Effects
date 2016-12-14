@@ -8,7 +8,7 @@ using NAudio.Wave;
 
 namespace Mp3Effects
 {
-    public class AudioPipeline
+    class AudioPipeline
     {
         public IProgressNotifier ProgressNotifier { get; set; }
 
@@ -22,9 +22,9 @@ namespace Mp3Effects
             this.Effects.Add(this.PitchEffect);
         }
 
-        public void ApplyEffects(string mp3Path, int semitones)
+        public void ApplyEffects(string mp3Path, EffectSettings settings)
         {
-            this.PitchEffect.Semitones = semitones;
+            this.PitchEffect.Semitones = settings.Pitch.Semitones;
 
             var tasksCount = 5;
             this.ProgressNotifier.Initialize(tasksCount, "Change the pitch of the mp3 file");
@@ -47,7 +47,7 @@ namespace Mp3Effects
 
             this.ProgressNotifier.Tick("Convert to mp3...");
             var outMp3Bytes = AudioUtils.WavToMp3(outWavBytes);
-            var outMp3Path = GetOutputMp3Path(mp3Path, semitones);
+            var outMp3Path = GetOutputMp3Path(mp3Path, settings.Pitch.Semitones);
 
             this.ProgressNotifier.Tick("Save mp3 file...");
             File.WriteAllBytes(outMp3Path, outMp3Bytes);
