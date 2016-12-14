@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Mp3Effects.UI;
 
 namespace Mp3Effects
 {
@@ -30,7 +31,12 @@ namespace Mp3Effects
 
             try
             {
-                new AudioPipeline().ApplyEffects(inputMp3Path, semitones);
+                using (var progressBar = new ProgressBarProgressNotifier())
+                {
+                    var pipeline = new AudioPipeline(progressBar);
+                    pipeline.ApplyEffects(inputMp3Path, semitones);
+                }
+                    
                 return 0;
             }
             catch (Exception ex)
@@ -43,12 +49,12 @@ namespace Mp3Effects
         private static void ShowUsage()
         {
             Console.WriteLine();
-            Console.WriteLine("----------------------- akorda -----------------------");
+            Console.WriteLine("-------------------- mp3 effects ---------------------");
             Console.WriteLine("-  Change the pitch of an mp3 be several semitones   -");
             Console.WriteLine("-  Usage:                                            -");
             Console.WriteLine("-  mp3effects mp3_file semitones                     -");
             Console.WriteLine("-  , semitones <> 0                                  -");
-            Console.WriteLine("----------------------- akorda -----------------------");
+            Console.WriteLine("-------------------- mp3 effects ---------------------");
         }
     }
 }

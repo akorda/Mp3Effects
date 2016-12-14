@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Mp3Effects.UI;
 using Mp3Effects.Effects;
 using NAudio.Wave;
 
@@ -9,11 +10,14 @@ namespace Mp3Effects
 {
     public class AudioPipeline
     {
+        public IProgressNotifier ProgressNotifier { get; set; }
+
         List<Effect> Effects = new List<Effect>();
         PitchEffect PitchEffect { get; set; }
 
-        public AudioPipeline()
+        public AudioPipeline(IProgressNotifier progressNotifier)
         {
+            this.ProgressNotifier = progressNotifier;
             this.PitchEffect = new PitchEffect();
             this.Effects.Add(this.PitchEffect);
         }
@@ -22,16 +26,30 @@ namespace Mp3Effects
         {
             this.PitchEffect.Semitones = semitones;
 
+            var tasksCount = 5;
+            this.ProgressNotifier.Initialize(tasksCount, "Change the pitch of the mp3 file");
+
+            this.ProgressNotifier.Tick("Read mp3 file...");
             var inMp3Bytes = File.ReadAllBytes(mp3Path);
+
+            this.ProgressNotifier.Tick("Convert to wav...");
             var inWavBytes = AudioUtils.Mp3ToWav(inMp3Bytes);
+
             var waveSamples = AudioUtils.WavToWaveSamples(inWavBytes);
             var sampleRate = waveSamples.WaveFormat.SampleRate;
             var samples = waveSamples.Samples;
             InitializeEffects(sampleRate);
+
+            this.ProgressNotifier.Tick("Apply effects...");
             Process(samples, 0, samples.Length, waveSamples.WaveFormat);
+                        
             var outWavBytes = AudioUtils.WaveSamplesToWav(waveSamples);
+
+            this.ProgressNotifier.Tick("Convert to mp3...");
             var outMp3Bytes = AudioUtils.WavToMp3(outWavBytes);
             var outMp3Path = GetOutputMp3Path(mp3Path, semitones);
+
+            this.ProgressNotifier.Tick("Save mp3 file...");
             File.WriteAllBytes(outMp3Path, outMp3Bytes);
         }
 
