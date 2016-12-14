@@ -5,7 +5,7 @@ using NAudio.Lame;
 using NAudio.Utils;
 using NAudio.Wave;
 
-namespace Akorda.Mp3Effects
+namespace Mp3Effects
 {
     public static class AudioUtils
     {

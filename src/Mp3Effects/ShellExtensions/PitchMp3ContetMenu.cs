@@ -8,7 +8,7 @@
 //using SharpShell.Attributes;
 //using SharpShell.SharpContextMenu;
 
-//namespace Akorda.Mp3Effects.ShellExtensions
+//namespace Mp3Effects.ShellExtensions
 //{
 //    [ComVisible(true)]
 //    [COMServerAssociation(AssociationType.ClassOfExtension, ".mp3")]

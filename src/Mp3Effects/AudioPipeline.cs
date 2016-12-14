@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Akorda.Mp3Effects.Effects;
+using Mp3Effects.Effects;
 using NAudio.Wave;
 
-namespace Akorda.Mp3Effects
+namespace Mp3Effects
 {
     public class AudioPipeline
     {

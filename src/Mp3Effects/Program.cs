@@ -1,14 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using Akorda.Mp3Effects.Effects;
-using NAudio.Wave;
 
-namespace Akorda.Mp3Effects
+namespace Mp3Effects
 {
     class Program
     {
