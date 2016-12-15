@@ -13,8 +13,9 @@ namespace Mp3Effects
     {
         public IProgressNotifier ProgressNotifier { get; set; }
 
-        List<Effect> Effects = new List<Effect>();
-        PitchEffect PitchEffect { get; set; }
+        private List<Effect> Effects = new List<Effect>();
+        private IEnumerable<Effect> EnabledEffects { get { return this.Effects.Where(e => e.Enabled); } }
+        private PitchEffect PitchEffect { get; set; }
 
         public AudioPipeline(IProgressNotifier progressNotifier)
         {
@@ -40,10 +41,10 @@ namespace Mp3Effects
             var waveSamples = AudioUtils.WavToWaveSamples(inWavBytes);
             var sampleRate = waveSamples.WaveFormat.SampleRate;
             var samples = waveSamples.Samples;
-            InitializeEffects(sampleRate);
+            this.InitializeEffects(sampleRate);
 
             this.ProgressNotifier.Tick("Apply effects...");
-            Process(samples, 0, samples.Length, waveSamples.WaveFormat);
+            this.ProcessSamples(samples, 0, samples.Length, waveSamples.WaveFormat);
                         
             var outWavBytes = AudioUtils.WaveSamplesToWav(waveSamples);
 
@@ -70,16 +71,16 @@ namespace Mp3Effects
 
         private void InitializeEffects(int sampleRate)
         {
-            foreach (var effect in Effects.Where(e => e.Enabled))
+            foreach (var effect in this.EnabledEffects)
             {
                 effect.SampleRate = sampleRate;
                 effect.Initialize();
             }
-        }
+        }        
 
-        private void Process(float[] buffer, int offset, int samplesCount, WaveFormat waveFormat)
-        {
-            foreach (var effect in Effects.Where(e => e.Enabled))
+        private void ProcessSamples(float[] buffer, int offset, int samplesCount, WaveFormat waveFormat)
+        {            
+            foreach (var effect in EnabledEffects)
             {
                 effect.Block(samplesCount);
             }
@@ -95,7 +96,7 @@ namespace Mp3Effects
                 }
 
                 // run these samples through the effect
-                foreach (var effect in Effects.Where(e => e.Enabled))
+                foreach (var effect in EnabledEffects)
                 {
                     effect.ProcessSample(ref sampleLeft, ref sampleRight);
                 }

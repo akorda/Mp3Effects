@@ -27,8 +27,9 @@ namespace Mp3Effects.Options
         {
             get
             {                
-                yield return new Example("Lower the pitch of a song by 2 semitones", new CommandLineOptions { Mp3File = "song.mp3", Semitones = -2 });
-                yield return new Example("Raise the pitch of a song by 3 semitones", new CommandLineOptions { Mp3File = "song.mp3", Semitones = 3 });
+                yield return new Example("Lower the pitch of a song by 2 semitones. The output file will be 'song-2.mp3'", new CommandLineOptions { Mp3File = "song.mp3", Semitones = -2 });
+                yield return new Example("Raise the pitch of a song by 3 semitones. The output file will be 'song+3.mp3'", new CommandLineOptions { Mp3File = "song.mp3", Semitones = 3 });
+                yield return new Example("Raise the pitch of a song by 1 semitone. The output file will be 'modified.mp3'", new CommandLineOptions { Mp3File = "song.mp3", Semitones = 3, OutputFile = "modified.mp3" });
                 //yield return new Example("Logging warnings", UnParserSettings.WithGroupSwitchesOnly(), new CommandLineOptions { InputFile = "file.bin", LogWarning = true });
                 //yield return new Example("Logging errors", new[] { UnParserSettings.WithGroupSwitchesOnly(), UnParserSettings.WithUseEqualTokenOnly() }, new Options { InputFile = "file.bin", LogError = true });
             }
