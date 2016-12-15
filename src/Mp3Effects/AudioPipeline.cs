@@ -70,7 +70,7 @@ namespace Mp3Effects
             foreach (var effect in Effects.Where(e => e.Enabled))
             {
                 effect.SampleRate = sampleRate;
-                effect.Init();
+                effect.Initialize();
             }
         }
 
@@ -94,7 +94,7 @@ namespace Mp3Effects
                 // run these samples through the effect
                 foreach (var effect in Effects.Where(e => e.Enabled))
                 {
-                    effect.OnSample(ref sampleLeft, ref sampleRight);
+                    effect.ProcessSample(ref sampleLeft, ref sampleRight);
                 }
 
                 // put them back

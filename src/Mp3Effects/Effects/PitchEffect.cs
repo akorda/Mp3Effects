@@ -28,35 +28,31 @@ namespace Mp3Effects.Effects
 
         public PitchEffect()
         {
-            slider1 = 0;//, -100, 100, 1, "Pitch adjust (cents)");
-            slider2 = 5;//, -12, 12, 1, "Pitch adjust (semitones)");
-            slider3 = 0;//, -8, 8, 1, "Pitch adjust (octaves)"); // mrh 12 octaves up causes issues, reigning this in a bit
-            slider4 = 50;//, 1, 200, 1, "Window size (ms)"); // mrh minimum window size set to 1 as 0 seems to cause issues
-            slider5 = 20;//, 0.05f, 50, 0.5f, "Overlap size (ms)");
-            slider6 = 0;//, -120, 6, 1, "Wet mix (dB)");
-            slider7 = -120;//, -120, 6, 1, "Dry mix (dB)");
-            slider8 = 1;//, 0, 1, 1, "Filter"); // {NO,YES}filter
+            Param1 = 0;//, -100, 100, 1, "Pitch adjust (cents)");
+            Param2 = 5;//, -12, 12, 1, "Pitch adjust (semitones)");
+            Param3 = 0;//, -8, 8, 1, "Pitch adjust (octaves)"); // mrh 12 octaves up causes issues, reigning this in a bit
+            Param4 = 50;//, 1, 200, 1, "Window size (ms)"); // mrh minimum window size set to 1 as 0 seems to cause issues
+            Param5 = 20;//, 0.05f, 50, 0.5f, "Overlap size (ms)");
+            Param6 = 0;//, -120, 6, 1, "Wet mix (dB)");
+            Param7 = -120;//, -120, 6, 1, "Dry mix (dB)");
+            Param8 = 1;//, 0, 1, 1, "Filter"); // {NO,YES}filter
             //filterSlider.DiscreteValueText.Add("Off");
             //filterSlider.DiscreteValueText.Add("On");
         }
 
-        private int _Semitones = 0;
         public int Semitones
         {
-            get { return _Semitones; }
+            get { return (int)Param2; }
             set
             {
-                _Semitones = value;
-                slider2 = value;
+                Param2 = value;
+                ParametersChanged = true;
             }
         }
 
-        //public override string Name
-        //{
-        //    get { return "SuperPitch"; }
-        //}
+        public override string Name { get { return "Pitch"; } }
 
-        public override void Init()
+        public override void Initialize()
         {
             bufsize = (int)SampleRate; // srate|0;
             xfade = 100;
@@ -68,13 +64,13 @@ namespace Mp3Effects.Effects
             bufdiff = bufloc1 - bufloc0;
             pitch = 1.0f;
             denorm = pow(10, -20);
-            base.Init();
+            base.Initialize();
         }
 
-        protected override void Slider()
+        protected override void ApplyParameters()
         {
-            filter = slider8 > 0.5;
-            int bsnew = (int)(Math.Min(slider4, 1000) * 0.001 * SampleRate);
+            filter = Param8 > 0.5;
+            int bsnew = (int)(min(Param4, 1000) * 0.001 * SampleRate);
             //   bsnew=(min(slider4,1000)*0.001*srate)|0;
             if (bsnew != bufsize)
             {
@@ -86,13 +82,13 @@ namespace Mp3Effects.Effects
                 }
             }
 
-            xfade = (int)(slider5 * 0.001 * SampleRate);
+            xfade = (int)(Param5 * 0.001 * SampleRate);
             if (xfade > bsnew * 0.5)
             {
                 xfade = bsnew * 0.5f;
             }
 
-            float npitch = pow(2, ((slider2 + slider1 * 0.01f) / 12 + slider3));
+            float npitch = pow(2, ((Param2 + Param1 * 0.01f) / 12 + Param3));
             if (pitch != npitch)
             {
                 pitch = npitch;
@@ -112,11 +108,11 @@ namespace Mp3Effects.Effects
                 h11 = h12 = h13 = h14 = 0;
             }
 
-            drymix = pow(2, (slider7 / 6));
-            wetmix = pow(2, (slider6 / 6));
+            drymix = pow(2, (Param7 / 6));
+            wetmix = pow(2, (Param6 / 6));
         }
 
-        protected override void Sample(ref float spl0, ref float spl1)
+        protected override void ProcessSampleInt(ref float spl0, ref float spl1)
         {
             int iv0 = (int)(v0);
             float frac0 = v0 - iv0;
@@ -143,7 +139,8 @@ namespace Mp3Effects.Effects
                 }
             }
             else
-            {// read pointer moving slower than write pointer
+            {
+                // read pointer moving slower than write pointer
                 tv = v0;
                 if (tv < buffer0) tv += bufsize;
                 if (tv >= buffer0 && tv < buffer0 + xfade)
@@ -158,8 +155,7 @@ namespace Mp3Effects.Effects
                     if (tv + vr < buffer0 + 1) v0 += xfade;
                 }
             }
-
-
+            
             if ((v0 += vr) >= (bufloc0 + bufsize)) v0 -= bufsize;
 
             float os0 = spl0;
@@ -175,7 +171,6 @@ namespace Mp3Effects.Effects
                 h04 = h03; h03 = spl0;
                 h14 = h13; h13 = spl1;
             }
-
 
             buffer[buffer0 + 0] = spl0; // write after reading it to avoid clicks
             buffer[buffer0 + bufdiff] = spl1;
@@ -198,7 +193,6 @@ namespace Mp3Effects.Effects
             spl1 += os1 * drymix;
 
             if ((buffer0 += 1) >= (bufloc0 + bufsize)) buffer0 -= bufsize;
-
         }
     }
 }
