@@ -8,7 +8,7 @@ using CommandLine.Text;
 
 namespace Mp3Effects.Options
 {
-    class CommandLineOptions
+    class CommandLineOptions : IEffectsOptions
     {
         [Value(0, Required = true, MetaName = "mp3", HelpText = "The mp3 file to apply the effects")]
         public string Mp3File { get; set; }
@@ -18,7 +18,10 @@ namespace Mp3Effects.Options
 
         //[Option(shortName:'v', longName: "verbose")]
         //public bool Verbose { get; set; }
-        
+
+        [Option(shortName: 'o', longName: "output", HelpText ="Output filename")]
+        public string OutputFile { get; set; }
+
         [Usage]
         public static IEnumerable<Example> Examples
         {

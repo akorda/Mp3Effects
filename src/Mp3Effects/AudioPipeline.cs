@@ -5,6 +5,7 @@ using System.Linq;
 using Mp3Effects.UI;
 using Mp3Effects.Effects;
 using NAudio.Wave;
+using Mp3Effects.Options;
 
 namespace Mp3Effects
 {
@@ -22,8 +23,9 @@ namespace Mp3Effects
             this.Effects.Add(this.PitchEffect);
         }
 
-        public void ApplyEffects(string mp3Path, EffectSettings settings)
+        public void ApplyEffects(IEffectsOptions options, EffectSettings settings)
         {
+            var mp3Path = options.Mp3File;
             this.PitchEffect.Semitones = settings.Pitch.Semitones;
 
             var tasksCount = 5;
@@ -47,7 +49,8 @@ namespace Mp3Effects
 
             this.ProgressNotifier.Tick("Convert to mp3...");
             var outMp3Bytes = AudioUtils.WavToMp3(outWavBytes);
-            var outMp3Path = GetOutputMp3Path(mp3Path, settings.Pitch.Semitones);
+            var outMp3Path = options.OutputFile;
+            if (string.IsNullOrEmpty(outMp3Path)) outMp3Path = GetOutputMp3Path(mp3Path, settings.Pitch.Semitones);
 
             this.ProgressNotifier.Tick("Save mp3 file...");
             File.WriteAllBytes(outMp3Path, outMp3Bytes);

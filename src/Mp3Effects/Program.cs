@@ -13,19 +13,21 @@ namespace Mp3Effects
         {
             string inputMp3Path = "";
             var settings = new EffectSettings();
+            CommandLineOptions commandLineOptions = null;
             var result = Parser.Default.ParseArguments<CommandLineOptions>(args).WithParsed(options =>
             {
+                commandLineOptions = options;
                 inputMp3Path = options.Mp3File;
                 settings.Pitch = new PitchSettings { Semitones = options.Semitones };
             }).MapResult(options =>
             {
-                return Run(inputMp3Path, settings);
+                return Run(commandLineOptions, settings);
             }, 
             errors => -1);
             return result;            
         }
 
-        private static int Run(string inputMp3Path, EffectSettings settings)
+        private static int Run(IEffectsOptions options, EffectSettings settings)
         {
             if (settings.Pitch.Semitones == 0)
             {
@@ -38,7 +40,7 @@ namespace Mp3Effects
                 using (var progressBar = new ProgressBarProgressNotifier())
                 {
                     var pipeline = new AudioPipeline(progressBar);
-                    pipeline.ApplyEffects(inputMp3Path, settings);
+                    pipeline.ApplyEffects(options, settings);
                 }
 
                 return 0;
