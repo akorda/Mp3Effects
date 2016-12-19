@@ -9,7 +9,7 @@ using Mp3Effects.Options;
 
 namespace Mp3Effects
 {
-    class AudioPipeline
+    public class AudioPipeline
     {
         public IProgressNotifier ProgressNotifier { get; set; }
 
@@ -17,17 +17,18 @@ namespace Mp3Effects
         private IEnumerable<Effect> EnabledEffects { get { return this.Effects.Where(e => e.Enabled); } }
         private PitchEffect PitchEffect { get; set; }
 
-        public AudioPipeline(IProgressNotifier progressNotifier)
+        public AudioPipeline(IProgressNotifier progressNotifier = null)
         {
+            if (progressNotifier == null) progressNotifier = new EmptyProgressNotifier();
             this.ProgressNotifier = progressNotifier;
             this.PitchEffect = new PitchEffect();
             this.Effects.Add(this.PitchEffect);
         }
 
-        public void ApplyEffects(IEffectsOptions options, EffectSettings settings)
+        public void ApplyEffects(IEffectsOptions options)
         {
             var mp3Path = options.Mp3File;
-            this.PitchEffect.Semitones = settings.Pitch.Semitones;
+            this.PitchEffect.Semitones = options.Semitones;
 
             var tasksCount = 5;
             this.ProgressNotifier.Initialize(tasksCount, "Change the pitch of the mp3 file");
@@ -51,7 +52,7 @@ namespace Mp3Effects
             this.ProgressNotifier.Tick("Convert to mp3...");
             var outMp3Bytes = AudioUtils.WavToMp3(outWavBytes);
             var outMp3Path = options.OutputFile;
-            if (string.IsNullOrEmpty(outMp3Path)) outMp3Path = GetOutputMp3Path(mp3Path, settings.Pitch.Semitones);
+            if (string.IsNullOrEmpty(outMp3Path)) outMp3Path = GetOutputMp3Path(mp3Path, options.Semitones);
 
             this.ProgressNotifier.Tick("Save mp3 file...");
             File.WriteAllBytes(outMp3Path, outMp3Bytes);
