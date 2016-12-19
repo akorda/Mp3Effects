@@ -14,7 +14,7 @@ Raise the pitch of a song by 3 semitones. The output file will be 'song+3.mp3':
 
 Raise the pitch of a song by 1 semitone. The output file will be 'modified.mp3':
 
-####   mp3fx --output modified.mp3 song.mp3 3
+####   mp3fx --output modified.mp3 song.mp3 1
 
 PARAMETERS:
 
