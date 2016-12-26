@@ -34,6 +34,7 @@ namespace MP3Effects.WinForms
             using (var dialog = new SaveFileDialog())
             {
                 dialog.Filter = "MP3 files|*.mp3|All Files|*.*";
+                dialog.Title = "Select the output mp3 file";
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     this.OutputPathTextBox.Text = dialog.FileName;
@@ -46,6 +47,7 @@ namespace MP3Effects.WinForms
             using (var dialog = new OpenFileDialog())
             {
                 dialog.Filter = "MP3 files|*.mp3|All Files|*.*";
+                dialog.Title = "Select the input mp3 file";
                 dialog.Multiselect = false;
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
