@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mp3Effects.CLI", "Mp3Effect
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mp3Effects.ShellExtensions", "Mp3Effects.ShellExtensions\Mp3Effects.ShellExtensions.csproj", "{43CF0B8D-4548-481C-BB1F-9A1BE9E0DCC7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MP3Effects.WinForms", "MP3Effects.WinForms\MP3Effects.WinForms.csproj", "{24E76537-25C0-4853-921F-A6653A591C8A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{43CF0B8D-4548-481C-BB1F-9A1BE9E0DCC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43CF0B8D-4548-481C-BB1F-9A1BE9E0DCC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43CF0B8D-4548-481C-BB1F-9A1BE9E0DCC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24E76537-25C0-4853-921F-A6653A591C8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24E76537-25C0-4853-921F-A6653A591C8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24E76537-25C0-4853-921F-A6653A591C8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24E76537-25C0-4853-921F-A6653A591C8A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
