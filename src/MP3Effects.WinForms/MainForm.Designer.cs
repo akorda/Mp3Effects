@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.label1 = new System.Windows.Forms.Label();
             this.InputPathTextBox = new System.Windows.Forms.TextBox();
             this.BrowseInputFileButton = new System.Windows.Forms.Button();
@@ -155,6 +156,7 @@
             this.Controls.Add(this.BrowseInputFileButton);
             this.Controls.Add(this.InputPathTextBox);
             this.Controls.Add(this.label1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.Text = "MP3 Effects";
             ((System.ComponentModel.ISupportInitialize)(this.SemitonesTrackBar)).EndInit();
